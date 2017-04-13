@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>TwittMap</title>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+        .header-search{
+	background-color:#292c2f;
+	box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+	padding: 20px 40px;
+	height: 80px;
+	color: #ffffff;
+	box-sizing: border-box;
+           
+}
+
+        #aaa {
+            position:absolute;
+            
+            right: 0;
+            bottom: 10;
+            
+        }
+        .header-limiter{
+             position:relative;
+        }
+.header-search .header-limiter {
+	max-width: 1200px;
+	text-align: center;
+	margin: 0 auto;
+}
+
+/* Logo */
+
+.header-search .header-limiter h1 {
+	float: left;
+	font: normal 28px Cookie, Arial, Helvetica, sans-serif;
+	line-height: 40px;
+	margin: 0;
+}
+
+.header-search .header-limiter h1 span {
+	color: #5383d3;
+}
+
+/* The header links */
+
+.header-search .header-limiter a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.header-search .header-limiter nav {
+	font:16px Arial, Helvetica, sans-serif;
+	line-height: 40px;
+	float: left;
+	margin: 0 0 0 60px;
+	padding: 0;
+}
+
+.header-search .header-limiter nav a {
+	display: inline-block;
+	padding: 0 5px;
+	text-decoration:none;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: normal;
+	opacity: 0.9;
+}
+
+.header-search .header-limiter nav a:hover {
+	opacity: 1;
+}
+
+.header-search .header-limiter nav a.selected {
+	color: #608bd2;
+	pointer-events: none;
+	opacity: 1;
+}
+
+/* The search box */
+
+.header-search .header-limiter form {
+	float:right;
+	position: relative;
+	right: 30px;
+	margin-left: 40px;
+	border-radius: 3px;
+	background-color:  #3a3c3e;
+	width: 44px;
+	height: 39px;
+	cursor: pointer;
+
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+/* CSS search icon */
+
+.header-search .header-limiter form:before {
+	position: absolute;
+	content: '';
+	border-radius: 50%;
+	border: 2px solid #fff;
+	width: 9px;
+	height: 9px;
+	top: 12px;
+	left: 14px;
+}
+
+.header-search .header-limiter form:after {
+	position: absolute;
+	content: '';
+	background-color: #fff;
+	width: 2px;
+	height: 8px;
+	top: 22px;
+	left: 26px;
+	-webkit-transform: rotate(-44deg);
+	-moz-transform: rotate(-44deg);
+	transform: rotate(-44deg);
+}
+
+/* The search box */
+
+.header-search .header-limiter form input {
+	display: none;
+	position: absolute;
+	right: 42px;
+	padding: 11px 12px 9px;
+	border: none;
+	width: 210px;
+	border-radius: 2px 0 0 2px;
+	height: 39px;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+        
+/* Making the header responsive. */
+
+@media all and (max-width: 600px) {
+
+	.header-search {
+		padding: 15px;
+		position: relative;
+	}
+
+	.header-search .header-limiter h1 {
+		float:none;
+		font-size: 24px;
+		line-height: 1;
+	}
+
+	.header-search .header-limiter nav {
+		text-align: center;
+		float: none;
+		margin: 0;
+	}
+
+	.header-search .header-limiter nav a {
+		font-size: 13px;
+	}
+
+	.header-search .header-limiter form {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+	}
+
+}
+    </style>
+      <link rel="stylesheet" type="text/css" href="header-search.css">
+<script type="text/javascript">
+var responseData;
+request = new ajaxRequest()
+request.open("GET", "TwittTrend", false)
+//request.open("GET","twittmap?update=True",false);
+request.onreadystatechange = function()
+{
+if (this.readyState == 4)
+{
+if (this.status == 200)
+{
+if (this.responseText != null)
+{
+//alert(this.responseText)
+responseData=JSON.parse(this.responseText);
+//alert(responseData)
+}
+else alert("Ajax error: No data received")
+}
+else alert( "Ajax error: " + this.statusText)
+}
+}
+request.send(null);
+function ajaxRequest()
+{
+try // Non IE Browser?
+{ // Yes
+var request = new XMLHttpRequest()
+}
+catch(e1)
+{
+try // IE 6+?
+{ // Yes
+request = new ActiveXObject("Msxml2.XMLHTTP")
+}
+catch(e2)
+{
+try // IE 5?
+{ // Yes
+request = new ActiveXObject("Microsoft.XMLHTTP")
+}
+catch(e3) // There is no AJAX Support
+{
+request = false
+}
+}
+}
+return request
+}
+</script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  </head>
+  
+  <body>
+      <header class="header-search">
+
+    <div class="header-limiter">
+
+        <h1>TwittMap</h1>
+        <table>
+            
+                <td><img src= "http://maps.google.com/mapfiles/ms/icons/green-dot.png" ></td>
+                <td><font color = "green">positive</font></td>
+            
+            
+                <td><img src= "http://maps.google.com/mapfiles/ms/icons/blue-dot.png" ></td>
+                <td><font color = "blue">neural</font></td>
+            
+            
+                <td><img src= "http://maps.google.com/mapfiles/ms/icons/red-dot.png" ></td>
+                <td><font color = "red">negative</font></td>
+            
+        </table>
+        
+        
+        
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <div id = "aaa">
+        <select id="combo" vertical-align = "middle">
+            <option value='1'>Google</option>
+            <option value='2'>New York</option>
+            <option value='4'>Trump</option>
+            <option value='5'>Hillary</option>
+            <option value='6'>Brooklyn</option>
+            <option value='7'>NBA</option>
+            <option value='8'>football</option>
+            <option value='10'>cloud</option>
+
+        </select>
+        <input id="button1" type="button" value="Show Tweets" onclick="changeWord(document.getElementById('combo'))"/>
+        <script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
+        </div>
+        
+
+    </div>
+    </header>
+	<div class="newTweet">COOL</div>
+      
+    <div id="map"></div>
+	<!--<form action="#">
+      coffee: <input type="checkbox" id="1box" onclick="boxclick(this,'1')" checked="checked" /> &nbsp;&nbsp;
+      food: <input type="checkbox" id="2box" onclick="boxclick(this,'2')" checked="checked"/> <br />
+    </form>  -->
+    </body>
+    
+
+    <script type="text/javascript">
+var map;
+var gmarkers=[];
+var myLatlng={lat: 40.6948184,lng : -73.985249};
+
+
+function changeWord(slt) {
+    hide('1');
+    hide('2');
+    hide('4');
+    hide('5');
+    hide('6');
+    hide('7');
+    hide('8');
+    hide('10');
+    
+    show(slt.options[slt.selectedIndex].value);
+}
+ 
+ function show(category) {
+        for (var i=0; i<gmarkers.length; i++) {
+          if (gmarkers[i].mycategory == category) {
+            gmarkers[i].setVisible(true);
+          }
+        }
+        // == check the checkbox ==
+       // document.getElementById(category+"box").checked = true;
+      }
+
+      // == hides all markers of a particular category, and ensures the checkbox is cleared ==
+ function hide(category) {
+        for (var i=0; i<gmarkers.length; i++) {
+          if (gmarkers[i].mycategory == category) {
+            gmarkers[i].setVisible(false);
+          }
+        }
+        // == clear the checkbox ==
+        //document.getElementById(category+"box").checked = false;
+        
+      }
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center:myLatlng,
+    zoom: 10
+  });
+   for (var i=0;i<responseData.Google.length;i++){
+   if(responseData.Google[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Google[i].latitude,lng: responseData.Google[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.Google[i].text
+});}
+   else if (responseData.Google[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Google[i].latitude,lng: responseData.Google[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.Google[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.Google[i].latitude,lng: responseData.Google[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.Google[i].text
+});}
+   marker.mycategory='1';
+  gmarkers.push(marker);
+ }
+for (var i=0;i<responseData.NewYork.length;i++){
+   if(responseData.NewYork[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.NewYork[i].latitude,lng: responseData.NewYork[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.NewYork[i].text
+});}
+   else if (responseData.NewYork[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.NewYork[i].latitude,lng: responseData.NewYork[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.NewYork[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.NewYork[i].latitude,lng: responseData.NewYork[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.NewYork[i].text
+});}
+	
+   marker.mycategory='2';
+  gmarkers.push(marker);
+ 
+ }
+  
+  for (var i=0;i<responseData.Trump.length;i++){
+   if(responseData.Trump[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Trump[i].latitude,lng: responseData.Trump[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.Trump[i].text
+});}
+   else if (responseData.Trump[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Trump[i].latitude,lng: responseData.Trump[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.Trump[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.Trump[i].latitude,lng: responseData.Trump[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.Trump[i].text
+});}
+   marker.mycategory='4';
+  gmarkers.push(marker);
+ }
+ for (var i=0;i<responseData.Hillary.length;i++){
+  if(responseData.Hillary[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Hillary[i].latitude,lng: responseData.Hillary[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.Hillary[i].text
+});}
+   else if (responseData.Hillary[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Hillary[i].latitude,lng: responseData.Hillary[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.Hillary[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.Hillary[i].latitude,lng: responseData.Hillary[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.Hillary[i].text
+});}
+   marker.mycategory='5';
+  gmarkers.push(marker);
+ }
+ for (var i=0;i<responseData.Brooklyn.length;i++){
+   if(responseData.Brooklyn[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Brooklyn[i].latitude,lng: responseData.Brooklyn[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.Brooklyn[i].text
+});}
+   else if (responseData.Brooklyn[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.Brooklyn[i].latitude,lng: responseData.Brooklyn[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.Brooklyn[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.Brooklyn[i].latitude,lng: responseData.Brooklyn[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.Brooklyn[i].text
+});}
+   marker.mycategory='6';
+  gmarkers.push(marker);
+ }
+ for (var i=0;i<responseData.NBA.length;i++){
+   if(responseData.NBA[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.NBA[i].latitude,lng: responseData.NBA[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.NBA[i].text
+});}
+   else if (responseData.NBA[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.NBA[i].latitude,lng: responseData.NBA[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.NBA[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.NBA[i].latitude,lng: responseData.NBA[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.NBA[i].text
+});}
+   marker.mycategory='7';
+  gmarkers.push(marker);
+ }
+ for (var i=0;i<responseData.football.length;i++){
+   if(responseData.football[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.football[i].latitude,lng: responseData.football[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.football[i].text
+});}
+   else if (responseData.football[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.football[i].latitude,lng: responseData.football[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.football[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.football[i].latitude,lng: responseData.football[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.football[i].text
+});}
+   marker.mycategory='8';
+  gmarkers.push(marker);
+ }
+ 
+ for (var i=0;i<responseData.cloud.length;i++){
+   if(responseData.cloud[i].sentiment=="POSITIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.cloud[i].latitude,lng: responseData.cloud[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+    title: responseData.cloud[i].text
+});}
+   else if (responseData.cloud[i].sentiment=="NEGATIVE"){
+   var marker= new google.maps.Marker({
+    position: {lat: responseData.cloud[i].latitude,lng: responseData.cloud[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+    title: responseData.cloud[i].text
+});}
+	else{var marker= new google.maps.Marker({
+    position: {lat: responseData.cloud[i].latitude,lng: responseData.cloud[i].longitude},
+	map:map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    title: responseData.cloud[i].text
+});}
+   marker.mycategory='10';
+  gmarkers.push(marker);
+ }
+  
+   // for (var i=0; i<gmarkers.length; i++) {
+	//     var title= gmarkers[i].getTitle();
+		 
+//		 var infowindow= new google.maps.InfoWindow({
+	//	content:title,
+	//	maxWidth: 200
+	//	});
+	//	 gmarkers[i].info=infowindow; 
+     //    gmarkers[i].addListener('click', function() {
+    
+   // gmarkers[i].info.open(map, gmarkers[i]);
+  //});
+    //    }
+   
+    
+  
+    
+  
+}
+
+</script>
+<script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDX9tC6vOBjmZJFjSTvoI-kTwZX2kEyrVo&callback=initMap">
+    </script>
+<script type="text/javascript">
+(function poll() {
+    setTimeout(function() {
+        $.ajax({
+  url: "TwittTrend",
+  type: "GET",
+  data: {
+    update: "True"
+  },
+  success: function(result) {
+    $( "div.newTweet" ).text(result);
+	
+	//alert(result);
+  },
+
+            dataType: "text",
+            complete: poll,
+            timeout: 2000
+        })
+    }, 3000);
+})();
+</script>
+  </body>
+</html>
